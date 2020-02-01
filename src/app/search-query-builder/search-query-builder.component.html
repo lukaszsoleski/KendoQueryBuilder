@@ -1,0 +1,98 @@
+<query-builder *ngIf="config" [(ngModel)]='query' [config]='config' [disabled]="disabled"
+  [allowCollapse]='allowCollapse' [allowRuleset]='allowRuleset'>
+
+  <ng-container
+    *queryButtonGroup="let ruleset; let addRule=addRule; let addRuleSet=addRuleSet; let removeRuleSet=removeRuleSet">
+    <button type="button" kendoButton [icon]="'plus'" (click)="addRule()" class="m-2" [disabled]="disabled">
+      Reguła
+    </button>
+    <button type="button" kendoButton [icon]="'plus-circle'" *ngIf="addRuleSet" (click)="addRuleSet()" class="m-2"
+      [disabled]="disabled">
+      Podgrupa
+    </button>
+    <button type="button" kendoButton [icon]="'close-circle'" *ngIf="removeRuleSet" (click)="removeRuleSet()"
+      class="m-2" [disabled]="disabled">
+      Usuń
+    </button>
+  </ng-container>
+
+  <ng-container *queryArrowIcon>
+    <span class="k-icon k-i-arrow-60-right"></span>
+  </ng-container>
+
+  <ng-container *queryRemoveButton="let rule; let removeRule=removeRule">
+    <button type="button" kendoButton [icon]="'close'" look="flat" (click)="removeRule(rule)" class="p-1"
+      [disabled]="disabled"></button>
+  </ng-container>
+
+  <ng-container *querySwitchGroup="let ruleset; let onChange=onChange">
+
+    <kendo-buttongroup *ngIf="ruleset" look="flat" [disabled]="disabled" [selection]="'single'">
+      <button kendoButton [toggleable]="true" [selected]="condition.value == ruleset.condition"
+        *ngFor="let condition of conditions" (selectedChange)="ruleset.condition = condition.value;"
+       >
+        {{condition.name}}
+      </button>
+    </kendo-buttongroup>
+
+  </ng-container>
+  <ng-container *queryEntity="let rule; let entities = entities let onChange=onChange">
+    <!-- ngModelChange -->
+   <kendo-dropdownlist *ngIf="entities" [(ngModel)]="rule.entity" (ngModelChange)="print($event, rule); onChange($event, rule);" [data]="entities"
+      [valueField]="'value'" [textField]="'name'" [valuePrimitive]="true" class="p-1" [disabled]="disabled">
+    </kendo-dropdownlist>
+
+  </ng-container>
+
+  <ng-container *queryField="let rule; let fields=fields; let onChange=onChange; let getFields=getFields">
+    <kendo-dropdownlist *ngIf="fields" [(ngModel)]="rule.field" (ngModelChange)="onChange($event, rule)"
+      [data]="getFields(rule.entity)" [valueField]="'value'" [textField]="'name'" [valuePrimitive]="true" class="p-1"
+      [disabled]="disabled">
+
+    </kendo-dropdownlist>
+
+  </ng-container>
+
+  <ng-container *queryOperator="let rule; let operators=operators; let onChange=onChange">
+
+    <kendo-dropdownlist [style.width.px]="150" [(ngModel)]="rule.operator" [data]="operators" [valuePrimitive]="true"
+      (ngModelChange)="onChange(rule)" class="p-1" [disabled]="disabled">
+    </kendo-dropdownlist>
+
+  </ng-container>
+  <ng-container *queryInput="let rule; let field=field; let options=options; type: 'category'; let onChange=onChange">
+    <kendo-dropdownlist [(ngModel)]="rule.value" (ngModelChange)="onChange()" [data]="options" [valueField]="'value'"
+      [textField]="'name'" [valuePrimitive]="true" class="p-1" [disabled]="disabled">
+    </kendo-dropdownlist>
+  </ng-container>
+
+  <ng-container *queryInput="let rule; let options=options; type: 'multiselect'; let onChange=onChange">
+
+    <kendo-multiselect [data]="options" [style.width.px]="300" [(ngModel)]="rule.value" textField="name"
+      valueField="value" [valuePrimitive]="true" (ngModelChange)="onChange()" class="p-1" [disabled]="disabled">
+    </kendo-multiselect>
+
+  </ng-container>
+
+  <ng-container *queryInput="let rule; type: 'date'; let onChange=onChange">
+    <kendo-datepicker [(value)]="rule.value" (ngModelChange)="onChange()" class="p-1" [disabled]="disabled">
+    </kendo-datepicker>
+  </ng-container>
+
+  <ng-container *queryInput="let rule; let field=field; type: 'textarea'; let onChange=onChange">
+    <input kendoTextBox [(ngModel)]="rule.value" (ngModelChange)="onChange()" class="p-1" [disabled]="disabled" />
+  </ng-container>
+  <ng-container *queryInput="let rule; let field=field; type: 'string'; let onChange=onChange">
+    <input kendoTextBox [(ngModel)]="rule.value" (ngModelChange)="onChange()" class="p-1" [disabled]="disabled" />
+  </ng-container>
+
+  <ng-container *queryInput="let rule; let field=field; type: 'number'; let onChange=onChange">
+    <kendo-numerictextbox [value]="rule.value" (ngModelChange)="onChange()" class="p-1" [disabled]="disabled">
+    </kendo-numerictextbox>
+  </ng-container>
+</query-builder>
+
+
+<pre>
+  {{query | json}}
+</pre>
